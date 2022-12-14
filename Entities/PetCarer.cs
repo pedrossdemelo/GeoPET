@@ -26,5 +26,5 @@ public class PetCarer
     [JsonIgnore]
     public string PasswordHash { get; set; } = default!;
 
-    public virtual List<Pet>? Pets { get; set; }
+    public virtual List<Pet> Pets { get; set; } = default!;
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeoPET.Migrations
 {
     [DbContext(typeof(GeoPetContext))]
-    [Migration("20221214175245_initial")]
+    [Migration("20221214203632_initial")]
     partial class initial
     {
         /// <inheritdoc />

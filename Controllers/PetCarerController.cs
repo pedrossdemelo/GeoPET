@@ -41,18 +41,17 @@ public class PetCarerController : ControllerBase
     }
 
     [HttpPatch]
-    public async Task<ActionResult<List<PetCarer>>> UpdatePetCarer(UpdateRequest body)
+    public async Task<ActionResult<PetCarer>> UpdatePetCarer(UpdateRequest body)
     {
         var result = await _petCarerService.UpdatePetCarer(body);
-        return Ok(result);
+        return CreatedAtAction(nameof(GetPetCarerById), new { id = result.PetCarerId }, result);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public async Task<ActionResult<string>> DeletePetCarer(int id)
+    public async Task<ActionResult> DeletePetCarer(int id)
     {
-        var success = await _petCarerService.DeletePetCarer(id);
-        if (!success) return NotFound("Pet Carer not found.");
+        await _petCarerService.DeletePetCarer(id);
         return NoContent();
     }
 }

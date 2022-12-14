@@ -48,6 +48,8 @@ public class PetCarerService : IPetCarerService
 
         await _context.SaveChangesAsync();
 
+        petCarer.Pets = await _context.Pets.Where(pet => pet.PetCarerId == petCarer.PetCarerId).ToListAsync();
+
         return petCarer;
     }
 
@@ -93,6 +95,8 @@ public class PetCarerService : IPetCarerService
         if (body.Password is not null) petCarer.PasswordHash = BCrypt.Net.BCrypt.HashPassword(body.Password);
 
         await _context.SaveChangesAsync();
+
+        petCarer.Pets = await _context.Pets.Where(pet => pet.PetCarerId == petCarer.PetCarerId).ToListAsync();
 
         return petCarer;
     }
