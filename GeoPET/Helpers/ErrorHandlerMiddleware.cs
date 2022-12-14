@@ -1,5 +1,6 @@
 namespace GeoPet.Helpers;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 
@@ -7,11 +8,13 @@ public class ErrorHandlerMiddleware
 {
     private readonly RequestDelegate _next;
 
+    [ExcludeFromCodeCoverage]
     public ErrorHandlerMiddleware(RequestDelegate next)
     {
         _next = next;
     }
 
+    [ExcludeFromCodeCoverage]
     public async Task Invoke(HttpContext context)
     {
         try
