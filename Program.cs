@@ -4,6 +4,7 @@ using GeoPet.Services;
 using GeoPet.Authorization;
 using GeoPet.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 
     services.AddCors();
     services.AddControllers();
+    // services.Configure<ApiBehaviorOptions>(options =>
+    // {
+    //     options.SuppressModelStateInvalidFilter = true;
+    // });
 
     // Configure DbContext
     services.AddDbContext<GeoPetContext>();

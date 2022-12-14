@@ -53,10 +53,10 @@ public class JwtUtils : IJwtUtils
             }, out SecurityToken validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+            var petCarerId = int.Parse(jwtToken.Claims.First(x => x.Type == "PetCarerId").Value);
 
             // return user id from JWT token if validation successful
-            return userId;
+            return petCarerId;
         }
         catch
         {

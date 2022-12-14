@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeoPET.Migrations
 {
     [DbContext(typeof(GeoPetContext))]
-    [Migration("20221214153223_initial")]
+    [Migration("20221214165749_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -3027,7 +3027,8 @@ namespace GeoPET.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()

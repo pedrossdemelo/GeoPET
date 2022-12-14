@@ -1,5 +1,5 @@
 ﻿using GeoPet.Interfaces;
-using GeoPet.Models.Responses;
+using GeoPet.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GeoPet.Controllers;

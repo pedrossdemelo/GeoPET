@@ -2,6 +2,7 @@
 using GeoPet.Entities;
 using GeoPet.Interfaces;
 using System.ComponentModel.DataAnnotations;
+using GeoPet.Models.Authorization;
 
 namespace GeoPet.Controllers;
 
@@ -33,14 +34,9 @@ public class PetCarerController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<PetCarer>> AddPetCarer(PetCarer body)
+    public async Task<ActionResult<PetCarer>> AddPetCarer(RegisterRequest body)
     {
-        PetCarer? result;
-        try {
-            result = await _petCarerService.AddPetCarer(body);
-        } catch (ValidationException e) {
-            return BadRequest(e.Message);
-        }
+        var result = await _petCarerService.AddPetCarer(body);
         return Ok(result);
     }
 

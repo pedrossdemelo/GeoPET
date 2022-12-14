@@ -23,9 +23,9 @@ public class ErrorHandlerMiddleware
             var response = context.Response;
             response.ContentType = "application/json";
 
-            switch(error)
+            switch (error)
             {
-                case AppException e:
+                case InvalidException e:
                     // custom application error
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     break;

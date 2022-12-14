@@ -12,6 +12,7 @@ public class PetCarer
     public int PetCarerId { get; set; }
 
     [Required(ErrorMessage = "Name is required")]
+    [StringLength(50, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 50 characters")]
     public string Name { get; set; } = default!;
 
     [Required(ErrorMessage = "Email is required")]

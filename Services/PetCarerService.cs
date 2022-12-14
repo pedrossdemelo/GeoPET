@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
+﻿using System.Net;
 using GeoPet.Data;
 using GeoPet.Interfaces;
 using GeoPet.Entities;
 using Microsoft.EntityFrameworkCore;
 using RestSharp;
 using GeoPet.Helpers;
+using GeoPet.Models.Authorization;
+using AutoMapper;
 
 namespace GeoPet.Services;
 
@@ -27,16 +28,29 @@ public class PetCarerService : IPetCarerService
         return false;
     }
     private readonly GeoPetContext _context;
+    private readonly IJwtUtils _jwtUtils;
+    private readonly IMapper _mapper;
 
-    public PetCarerService(GeoPetContext context)
+    public PetCarerService(GeoPetContext context, IJwtUtils jwtUtils, IMapper mapper)
     {
         _context = context;
+        _jwtUtils = jwtUtils;
+        _mapper = mapper;
     }
 
-    public async Task<PetCarer> AddPetCarer(PetCarer body)
+    public async Task<PetCarer> AddPetCarer(RegisterRequest body)
     {
-        if (!await _validateZipCode(body.ZipCode)) throw new AppException("Invalid ZipCode");
-        return body;
+        if (!await _validateZipCode(body.ZipCode)) throw new InvalidException("Invalid ZipCode");
+
+        var petCarer = _mapper.Map<PetCarer>(body);
+
+        petCarer.PasswordHash = BCrypt.Net.BCrypt.HashPassword(body.Password);
+
+        await _context.PetCarers.AddAsync(petCarer);
+
+        await _context.SaveChangesAsync();
+
+        return petCarer;
     }
 
     public async Task<bool> DeletePetCarer(int id)
@@ -71,7 +85,7 @@ public class PetCarerService : IPetCarerService
         var petCarer = await _context.PetCarers.FindAsync(id);
 
         if (petCarer is null) throw new KeyNotFoundException("PetCarer not found");
-        if (!await _validateZipCode(body.ZipCode.ToString())) throw new AppException("Invalid ZipCode");
+        if (!await _validateZipCode(body.ZipCode.ToString())) throw new InvalidException("Invalid ZipCode");
 
         petCarer.Name = body.Name;
         petCarer.Email = body.Email;

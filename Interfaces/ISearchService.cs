@@ -1,4 +1,4 @@
-﻿using GeoPet.Models.Responses;
+﻿using GeoPet.Models.Response;
 
 namespace GeoPet.Interfaces;
 

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace GeoPet.Models.Responses;
+namespace GeoPet.Models.Response;
 
 public class Address
 {
