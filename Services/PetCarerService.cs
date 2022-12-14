@@ -25,6 +25,10 @@ public class PetCarerService : IPetCarerService
         if (response?.Content == null || response.Content.Contains("erro")) return false;
         return true;
     }
+
+    public async Task<PetCarer?> GetCarer(int id) {
+        return await _context.PetCarers.Include(petCarer => petCarer.Pets).FirstOrDefaultAsync(petCarer => petCarer.PetCarerId == id);
+    }
     private readonly GeoPetContext _context;
     private readonly IJwtUtils _jwtUtils;
     private readonly IMapper _mapper;

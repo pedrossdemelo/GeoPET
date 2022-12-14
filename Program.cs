@@ -46,6 +46,21 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate();
 }
 
+
+// configure request pipeline
+// cors policy
+app.UseCors(x => x
+.AllowAnyOrigin()
+.AllowAnyMethod()
+.AllowAnyHeader());
+
+// error handler
+app.UseMiddleware<ErrorHandlerMiddleware>();
+
+// authentication handler
+app.UseMiddleware<JwtMiddleware>();
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -53,26 +68,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// configure request pipeline
-{
-    // cors policy
-    app.UseCors(x => x
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
-
-    // error handler
-    app.UseMiddleware<ErrorHandlerMiddleware>();
-
-    // authentication handler
-    app.UseMiddleware<JwtMiddleware>();
-
-    // redirect to https
-    app.UseHttpsRedirection();
-
-    // map routes
-    app.MapControllers();
-}
+// map routes
+app.MapControllers();
 
 app.Run();
 

@@ -1,5 +1,6 @@
 namespace GeoPet.Authorization;
 
+using System.Text.Json;
 using GeoPet.Interfaces;
 
 public class JwtMiddleware
@@ -14,11 +15,14 @@ public class JwtMiddleware
     public async Task Invoke(HttpContext context, IPetCarerService petCarerService, IJwtUtils jwtUtils)
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        var headers = context.Request.Headers;
+        var headersJSON = JsonSerializer.Serialize(headers);
+        Console.WriteLine(headersJSON);
         var petCarerId = jwtUtils.ValidateToken(token ?? "");
-        if (petCarerId != null)
+        if (petCarerId is not null)
         {
             // attach user to context on successful jwt validation
-            context.Items["PetCarer"] = petCarerService.GetPetCarerById(petCarerId.Value);
+            context.Items["PetCarer"] = await petCarerService.GetCarer(petCarerId.Value);
         }
 
         await _next(context);

@@ -31,7 +31,6 @@ public class PetCarerController : ControllerBase
     public async Task<ActionResult<PetCarer>> GetPetCarerById(int id)
     {
         var result = await _petCarerService.GetPetCarerById(id);
-        if (result is null) return NotFound("Pet Carer not found.");
         return Ok(result);
     }
 
@@ -59,8 +58,8 @@ public class PetCarerController : ControllerBase
         return NoContent();
     }
 
-    [AllowAnonymous]
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest body)
     {
         var response = await _petCarerService.Authenticate(body);
