@@ -2,9 +2,10 @@
 using System.Net;
 using GeoPet.Data;
 using GeoPet.Interfaces;
-using GeoPet.Models;
+using GeoPet.Entities;
 using Microsoft.EntityFrameworkCore;
 using RestSharp;
+using GeoPet.Helpers;
 
 namespace GeoPet.Services;
 
@@ -32,9 +33,9 @@ public class PetCarerService : IPetCarerService
         _context = context;
     }
 
-    public async Task<PetCarer?> AddPetCarer(PetCarer body)
+    public async Task<PetCarer> AddPetCarer(PetCarer body)
     {
-        if (!await _validateZipCode(body.ZipCode)) throw new ValidationException("Invalid ZipCode");
+        if (!await _validateZipCode(body.ZipCode)) throw new AppException("Invalid ZipCode");
         return body;
     }
 
@@ -42,7 +43,7 @@ public class PetCarerService : IPetCarerService
     {
         var petCarer = await _context.PetCarers.FindAsync(id);
 
-        if (petCarer is null) return false;
+        if (petCarer is null) throw new KeyNotFoundException("PetCarer not found");
 
         _context.PetCarers.Remove(petCarer);
 
@@ -58,24 +59,23 @@ public class PetCarerService : IPetCarerService
         return result;
     }
 
-    public async Task<PetCarer?> GetPetCarerById(int id)
+    public async Task<PetCarer> GetPetCarerById(int id)
     {
         var petCarer = await _context.PetCarers.Include(petCarer => petCarer.Pets).FirstOrDefaultAsync(petCarer => petCarer.PetCarerId == id);
-        if (petCarer is null) return null;
+        if (petCarer is null) throw new KeyNotFoundException("PetCarer not found");
         return petCarer;
     }
 
-    public async Task<PetCarer?> UpdatePetCarer(int id, PetCarer body)
+    public async Task<PetCarer> UpdatePetCarer(int id, PetCarer body)
     {
         var petCarer = await _context.PetCarers.FindAsync(id);
 
-        if (petCarer is null) return null;
-        if (!await _validateZipCode(body.ZipCode.ToString())) throw new ValidationException("Invalid ZipCode");
+        if (petCarer is null) throw new KeyNotFoundException("PetCarer not found");
+        if (!await _validateZipCode(body.ZipCode.ToString())) throw new AppException("Invalid ZipCode");
 
         petCarer.Name = body.Name;
         petCarer.Email = body.Email;
         petCarer.ZipCode = body.ZipCode;
-        petCarer.Password = body.Password;
 
         await _context.SaveChangesAsync();
 

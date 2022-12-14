@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeoPET.Migrations
 {
     [DbContext(typeof(GeoPetContext))]
-    [Migration("20221214120204_initial")]
+    [Migration("20221214153223_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace GeoPET.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GeoPet.Models.Breed", b =>
+            modelBuilder.Entity("GeoPet.Entities.Breed", b =>
                 {
                     b.Property<int>("BreedId")
                         .ValueGeneratedOnAdd()
@@ -2965,7 +2965,7 @@ namespace GeoPET.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GeoPet.Models.Pet", b =>
+            modelBuilder.Entity("GeoPet.Entities.Pet", b =>
                 {
                     b.Property<int>("PetId")
                         .ValueGeneratedOnAdd()
@@ -2979,7 +2979,7 @@ namespace GeoPET.Migrations
                     b.Property<int?>("BreedId")
                         .HasColumnType("int");
 
-                    b.Property<string>("HashLocalization")
+                    b.Property<string>("LocalizationHash")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -3013,7 +3013,7 @@ namespace GeoPET.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GeoPet.Models.PetCarer", b =>
+            modelBuilder.Entity("GeoPet.Entities.PetCarer", b =>
                 {
                     b.Property<int>("PetCarerId")
                         .ValueGeneratedOnAdd()
@@ -3029,7 +3029,7 @@ namespace GeoPET.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -3051,18 +3051,18 @@ namespace GeoPET.Migrations
                             PetCarerId = 1,
                             Email = "johndoe@email.com",
                             Name = "John Doe",
-                            Password = "123456",
+                            PasswordHash = "VlKqPxGgnUZQSClj9S6ZA2ubZdyDuxsqqVgFBAvZ57aMLABXA45YJH5ewrntl4klJ8vm7lK+d3yQnFOVegdzoPTgiy5AubUzL6lBqDxT1sZC7pVbXLsgyUBaZ1mr/j8k/Y+XQxZ9M8mfLfQPJeeVrxiLfQ5wgT0aXTqfFv68tBdvD6V0ZMbnwcVrijZq+bdurp+GV1+wqDshGVpBh3FpI8WRVyfxzfBfiUWrZfuvc5t+srZqM8MUZCVsTHNyvCBxBd1k0AWKTUmbnLTIERqTzZF6lq/C/9OOiPPd0c2hM/+W1QSWs8vYOFT5Ogf0D087IEbUSb1pOcgLa877imMv9Q==",
                             ZipCode = "05426200"
                         });
                 });
 
-            modelBuilder.Entity("GeoPet.Models.Pet", b =>
+            modelBuilder.Entity("GeoPet.Entities.Pet", b =>
                 {
-                    b.HasOne("GeoPet.Models.Breed", "Breed")
+                    b.HasOne("GeoPet.Entities.Breed", "Breed")
                         .WithMany("Pets")
                         .HasForeignKey("BreedId");
 
-                    b.HasOne("GeoPet.Models.PetCarer", "PetCarer")
+                    b.HasOne("GeoPet.Entities.PetCarer", "PetCarer")
                         .WithMany("Pets")
                         .HasForeignKey("PetCarerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3073,12 +3073,12 @@ namespace GeoPET.Migrations
                     b.Navigation("PetCarer");
                 });
 
-            modelBuilder.Entity("GeoPet.Models.Breed", b =>
+            modelBuilder.Entity("GeoPet.Entities.Breed", b =>
                 {
                     b.Navigation("Pets");
                 });
 
-            modelBuilder.Entity("GeoPet.Models.PetCarer", b =>
+            modelBuilder.Entity("GeoPet.Entities.PetCarer", b =>
                 {
                     b.Navigation("Pets");
                 });

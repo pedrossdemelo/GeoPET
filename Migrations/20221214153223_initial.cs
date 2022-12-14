@@ -34,7 +34,7 @@ namespace GeoPET.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ZipCode = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,7 +51,7 @@ namespace GeoPET.Migrations
                     Age = table.Column<int>(type: "int", nullable: false),
                     Weight = table.Column<double>(type: "float", nullable: false),
                     BreedId = table.Column<int>(type: "int", nullable: true),
-                    HashLocalization = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocalizationHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PetCarerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -663,12 +663,12 @@ namespace GeoPET.Migrations
 
             migrationBuilder.InsertData(
                 table: "PetCarers",
-                columns: new[] { "PetCarerId", "Email", "Name", "Password", "ZipCode" },
-                values: new object[] { 1, "johndoe@email.com", "John Doe", "123456", "05426200" });
+                columns: new[] { "PetCarerId", "Email", "Name", "PasswordHash", "ZipCode" },
+                values: new object[] { 1, "johndoe@email.com", "John Doe", "VlKqPxGgnUZQSClj9S6ZA2ubZdyDuxsqqVgFBAvZ57aMLABXA45YJH5ewrntl4klJ8vm7lK+d3yQnFOVegdzoPTgiy5AubUzL6lBqDxT1sZC7pVbXLsgyUBaZ1mr/j8k/Y+XQxZ9M8mfLfQPJeeVrxiLfQ5wgT0aXTqfFv68tBdvD6V0ZMbnwcVrijZq+bdurp+GV1+wqDshGVpBh3FpI8WRVyfxzfBfiUWrZfuvc5t+srZqM8MUZCVsTHNyvCBxBd1k0AWKTUmbnLTIERqTzZF6lq/C/9OOiPPd0c2hM/+W1QSWs8vYOFT5Ogf0D087IEbUSb1pOcgLa877imMv9Q==", "05426200" });
 
             migrationBuilder.InsertData(
                 table: "Pets",
-                columns: new[] { "PetId", "Age", "BreedId", "HashLocalization", "Name", "PetCarerId", "Weight" },
+                columns: new[] { "PetId", "Age", "BreedId", "LocalizationHash", "Name", "PetCarerId", "Weight" },
                 values: new object[] { 1, 3, 26, null, "Bailey", 1, 5.5 });
 
             migrationBuilder.CreateIndex(

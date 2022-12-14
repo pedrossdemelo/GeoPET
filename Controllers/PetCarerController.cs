@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using GeoPet.Models;
+using GeoPet.Entities;
 using GeoPet.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
@@ -18,7 +18,9 @@ public class PetCarerController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<PetCarer>>> GetAllPetCarers()
     {
-        return await _petCarerService.GetAllPetCarers();
+        var petCarers = await _petCarerService.GetAllPetCarers();
+
+        return Ok(petCarers);
     }
 
     [HttpGet]

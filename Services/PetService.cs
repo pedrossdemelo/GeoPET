@@ -1,6 +1,6 @@
 ﻿using GeoPet.Data;
 using GeoPet.Interfaces;
-using GeoPet.Models;
+using GeoPet.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace GeoPet.Services;
@@ -14,7 +14,7 @@ public class PetService : IPetService
         _context = context;
     }
 
-    public async Task<Pet?> AddPet(Pet body)
+    public async Task<Pet> AddPet(Pet body)
     {
         _context.Pets.Add(body);
         await _context.SaveChangesAsync();
@@ -24,7 +24,7 @@ public class PetService : IPetService
     public async Task<bool> DeletePet(int id)
     {
         var searchPet = await _context.Pets.FindAsync(id);
-        if (searchPet is null) return false;
+        if (searchPet is null) throw new KeyNotFoundException("Pet not found");
 
         _context.Pets.Remove(searchPet);
         await _context.SaveChangesAsync();
@@ -37,25 +37,25 @@ public class PetService : IPetService
         return result;
     }
 
-    public async Task<Pet?> GetPetById(int id)
+    public async Task<Pet> GetPetById(int id)
     {
         var result = await _context.Pets.FindAsync(id);
-        if (result is null) return null;
+        if (result is null) throw new KeyNotFoundException("Pet not found");
 
         return result;
     }
 
-    public async Task<Pet?> UpdatePet(int id, Pet body)
+    public async Task<Pet> UpdatePet(int id, Pet body)
     {
         var searchPet = await _context.Pets.FindAsync(id);
-        if (searchPet is null) return null;
+        if (searchPet is null) throw new KeyNotFoundException("Pet not found");
 
         searchPet.Name = body.Name;
         searchPet.Age = body.Age;
         searchPet.Weight = body.Weight;
         searchPet.BreedId = body.BreedId;
         searchPet.PetCarerId = body.PetCarerId;
-        searchPet.HashLocalization = body.HashLocalization; 
+        searchPet.LocalizationHash = body.LocalizationHash; 
 
         await _context.SaveChangesAsync();
         return body;

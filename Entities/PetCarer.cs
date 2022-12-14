@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
-namespace GeoPet.Models;
+namespace GeoPet.Entities;
 
 [Index(nameof(Email), IsUnique = true)]
 public class PetCarer
@@ -23,9 +22,8 @@ public class PetCarer
     [StringLength(8, MinimumLength = 8, ErrorMessage = "ZipCode must have 8 digits")]
     public string ZipCode { get; set; } = default!;
 
-    [Required(ErrorMessage = "Password is required")]
-    [StringLength(20, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 20 characters")]
-    public string Password { get; set; } = default!;
+    [JsonIgnore]
+    public string PasswordHash { get; set; } = default!;
 
     public virtual List<Pet>? Pets { get; set; }
 }

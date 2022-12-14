@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace GeoPet.Models;
+namespace GeoPet.Entities;
 
 public class Pet
 {
@@ -27,7 +27,7 @@ public class Pet
     [JsonIgnore]
     public virtual Breed? Breed { get; set; }
 
-    public string? HashLocalization { get; set; }
+    public string? LocalizationHash { get; set; }
 
     [Required(ErrorMessage = "A pet must have a pet carer")]
     [JsonIgnore]

@@ -1,26 +1,48 @@
 ﻿using GeoPet.Data;
 using GeoPet.Interfaces;
 using GeoPet.Services;
+using GeoPet.Authorization;
+using GeoPet.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
-builder.Services.AddScoped<IPetService, PetService>();
-builder.Services.AddScoped<IPetCarerService, PetCarerService>();
+// Add services to the Dependency Injection container.
+{
+    var services = builder.Services;
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    services.AddCors();
+    services.AddControllers();
 
-// Add DbContext
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<GeoPetContext>(
-    options => options.UseSqlServer(connectionString)
-);
+    // Configure DbContext
+    services.AddDbContext<GeoPetContext>();
+
+    // Configure auto mapper with all automapper profiles
+    services.AddAutoMapper(typeof(Program));
+
+    // Configure strongly typed settings objects
+    services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
+    // Setup DI
+    services.AddScoped<IPetService, PetService>();
+    services.AddScoped<IPetCarerService, PetCarerService>();
+    services.AddScoped<ISearchService, SearchService>();
+    services.AddScoped<IJwtUtils, JwtUtils>();
+
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
+}
 
 var app = builder.Build();
+
+// Migrate database
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var context = serviceProvider.GetRequiredService<GeoPetContext>();
+    context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -29,11 +51,26 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// configure request pipeline
+{
+    // cors policy
+    app.UseCors(x => x
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
 
-app.UseAuthorization();
+    // authentication handler
+    app.UseMiddleware<JwtMiddleware>();
 
-app.MapControllers();
+    // error handler
+    app.UseMiddleware<ErrorHandlerMiddleware>();
+
+    // redirect to https
+    app.UseHttpsRedirection();
+
+    // map routes
+    app.MapControllers();
+}
 
 app.Run();
 
