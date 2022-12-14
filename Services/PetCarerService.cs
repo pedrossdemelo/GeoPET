@@ -16,16 +16,9 @@ public class PetCarerService : IPetCarerService
     {
         var client = new RestClient("https://viacep.com.br/ws/");
         var request = new RestRequest(zipCode + "/json", Method.Get);
-        try
-        {
-            var response = await client.GetAsync(request);
-            if (response.StatusCode == HttpStatusCode.OK) return true;
-        }
-        catch
-        {
-            return false;
-        }
-        return false;
+        var response = await client.GetAsync(request);
+        if (response.Content == null || response.Content.Contains("erro")) return false;
+        return true;
     }
     private readonly GeoPetContext _context;
     private readonly IJwtUtils _jwtUtils;

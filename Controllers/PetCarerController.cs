@@ -37,7 +37,6 @@ public class PetCarerController : ControllerBase
     public async Task<ActionResult<PetCarer>> AddPetCarer(RegisterRequest body)
     {
         var result = await _petCarerService.AddPetCarer(body);
-        // return 201 Created
         return CreatedAtAction(nameof(GetPetCarerById), new { id = result.PetCarerId }, result);
     }
 
