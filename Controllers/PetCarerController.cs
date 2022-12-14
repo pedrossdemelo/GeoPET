@@ -40,17 +40,10 @@ public class PetCarerController : ControllerBase
         return CreatedAtAction(nameof(GetPetCarerById), new { id = result.PetCarerId }, result);
     }
 
-    [HttpPut]
-    [Route("{id}")]
-    public async Task<ActionResult<List<PetCarer>>> UpdatePetCarer(int id, PetCarer body)
+    [HttpPatch]
+    public async Task<ActionResult<List<PetCarer>>> UpdatePetCarer(UpdateRequest body)
     {
-        PetCarer? result;
-        try {
-            result = await _petCarerService.UpdatePetCarer(id, body);
-        } catch (ValidationException e) {
-            return BadRequest(e.Message);
-        }
-        if (result is null) return NotFound("Pet Carer not found.");
+        var result = await _petCarerService.UpdatePetCarer(body);
         return Ok(result);
     }
 
@@ -58,8 +51,8 @@ public class PetCarerController : ControllerBase
     [Route("{id}")]
     public async Task<ActionResult<string>> DeletePetCarer(int id)
     {
-        var sucess = await _petCarerService.DeletePetCarer(id);
-        if (!sucess) return NotFound("Pet Carer not found.");
+        var success = await _petCarerService.DeletePetCarer(id);
+        if (!success) return NotFound("Pet Carer not found.");
         return NoContent();
     }
 }

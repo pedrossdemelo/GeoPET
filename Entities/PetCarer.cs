@@ -20,7 +20,7 @@ public class PetCarer
     public string Email { get; set; } = default!;
 
     [Required(ErrorMessage = "ZipCode is required")]
-    [StringLength(8, MinimumLength = 8, ErrorMessage = "ZipCode must have 8 digits")]
+    [StringLength(8, MinimumLength = 8, ErrorMessage = "Zip code must have 8 digits")]
     public string ZipCode { get; set; } = default!;
 
     [JsonIgnore]

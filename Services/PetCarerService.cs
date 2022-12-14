@@ -1,5 +1,4 @@
-﻿using System.Net;
-using GeoPet.Data;
+﻿using GeoPet.Data;
 using GeoPet.Interfaces;
 using GeoPet.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +15,14 @@ public class PetCarerService : IPetCarerService
     {
         var client = new RestClient("https://viacep.com.br/ws/");
         var request = new RestRequest(zipCode + "/json", Method.Get);
-        var response = await client.GetAsync(request);
-        if (response.Content == null || response.Content.Contains("erro")) return false;
+        RestResponse? response = null;
+        try {
+            response = await client.GetAsync(request);
+        } catch (Exception e) {
+            Console.WriteLine(e);
+            return false;
+        }
+        if (response?.Content == null || response.Content.Contains("erro")) return false;
         return true;
     }
     private readonly GeoPetContext _context;
@@ -73,16 +78,19 @@ public class PetCarerService : IPetCarerService
         return petCarer;
     }
 
-    public async Task<PetCarer> UpdatePetCarer(int id, PetCarer body)
+    public async Task<PetCarer> UpdatePetCarer(UpdateRequest body)
     {
-        var petCarer = await _context.PetCarers.FindAsync(id);
+        var petCarer = await _context.PetCarers.FirstOrDefaultAsync(petCarer => petCarer.Email == body.Email);
 
         if (petCarer is null) throw new KeyNotFoundException("PetCarer not found");
-        if (!await _validateZipCode(body.ZipCode.ToString())) throw new InvalidException("Invalid ZipCode");
-
-        petCarer.Name = body.Name;
-        petCarer.Email = body.Email;
-        petCarer.ZipCode = body.ZipCode;
+        if (body.Name is not null) petCarer.Name = body.Name;
+        if (body.Email is not null) petCarer.Email = body.Email;
+        if (body.ZipCode is not null)
+        {
+            if (!await _validateZipCode(body.ZipCode)) throw new InvalidException("Invalid ZipCode");
+            petCarer.ZipCode = body.ZipCode;
+        }
+        if (body.Password is not null) petCarer.PasswordHash = BCrypt.Net.BCrypt.HashPassword(body.Password);
 
         await _context.SaveChangesAsync();
 
