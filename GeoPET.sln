@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoPET", "GeoPET.csproj", "{BCEDC46C-8B72-438B-A91E-986DABAE8B12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoPET", "GeoPET\GeoPET.csproj", "{BCEDC46C-8B72-438B-A91E-986DABAE8B12}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoPET.Test", "GeoPET.Test\GeoPET.Test.csproj", "{4C8179C7-BF30-4D41-9438-466C26CBFD1C}"
 EndProject

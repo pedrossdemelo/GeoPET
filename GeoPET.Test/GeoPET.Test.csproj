@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -19,11 +19,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+	  <PackageReference Include="Moq" Version="4.17.2" />
+	  <PackageReference Include="Moq.AutoMock" Version="3.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="IntegrationTests\" />
-    <Folder Include="UnitTests\" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\GeoPET\GeoPET.csproj" />
+	</ItemGroup>
 
 </Project>
