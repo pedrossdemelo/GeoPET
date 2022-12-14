@@ -39,7 +39,7 @@ public class ErrorHandlerMiddleware
                     break;
             }
 
-            var result = JsonSerializer.Serialize(new { message = error.Message });
+            var result = JsonSerializer.Serialize(new { error = error.Message });
             await response.WriteAsync(result);
         }
     }
