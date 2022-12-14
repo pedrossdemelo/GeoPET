@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeoPET.Test.UnitTests.ServicesTests
 {
-    internal class PetCarerServiceTest
+    internal class SearchTest
     {
     }
 }
