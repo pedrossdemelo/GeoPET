@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using GeoPet.Models;
 using GeoPet.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace GeoPet.Controllers;
 
@@ -32,8 +33,12 @@ public class PetCarerController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<PetCarer>> AddPetCarer(PetCarer body)
     {
-        var result = await _petCarerService.AddPetCarer(body);
-        if (result is null) return BadRequest("N motivos");
+        PetCarer? result;
+        try {
+            result = await _petCarerService.AddPetCarer(body);
+        } catch (ValidationException e) {
+            return BadRequest(e.Message);
+        }
         return Ok(result);
     }
 
@@ -41,7 +46,12 @@ public class PetCarerController : ControllerBase
     [Route("{id}")]
     public async Task<ActionResult<List<PetCarer>>> UpdatePetCarer(int id, PetCarer body)
     {
-        var result = await _petCarerService.UpdatePetCarer(id, body);
+        PetCarer? result;
+        try {
+            result = await _petCarerService.UpdatePetCarer(id, body);
+        } catch (ValidationException e) {
+            return BadRequest(e.Message);
+        }
         if (result is null) return NotFound("Pet Carer not found.");
         return Ok(result);
     }

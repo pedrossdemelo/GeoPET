@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 using GeoPet.Data;
 using GeoPet.Interfaces;
 using GeoPet.Models;
@@ -33,7 +34,7 @@ public class PetCarerService : IPetCarerService
 
     public async Task<PetCarer?> AddPetCarer(PetCarer body)
     {
-        if (!await _validateZipCode(body.ZipCode)) return null;
+        if (!await _validateZipCode(body.ZipCode)) throw new ValidationException("Invalid ZipCode");
         return body;
     }
 
@@ -69,9 +70,7 @@ public class PetCarerService : IPetCarerService
         var petCarer = await _context.PetCarers.FindAsync(id);
 
         if (petCarer is null) return null;
-        if (!await _validateZipCode(body.ZipCode.ToString())) return null;
-        if (body.Email != petCarer.Email && _context.PetCarers.AnyAsync(petCarer => petCarer.Email == body.Email).Result)
-            return null;
+        if (!await _validateZipCode(body.ZipCode.ToString())) throw new ValidationException("Invalid ZipCode");
 
         petCarer.Name = body.Name;
         petCarer.Email = body.Email;
