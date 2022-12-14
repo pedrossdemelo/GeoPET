@@ -664,7 +664,7 @@ namespace GeoPET.Migrations
             migrationBuilder.InsertData(
                 table: "PetCarers",
                 columns: new[] { "PetCarerId", "Email", "Name", "PasswordHash", "ZipCode" },
-                values: new object[] { 1, "johndoe@email.com", "John Doe", "VlKqPxGgnUZQSClj9S6ZA2ubZdyDuxsqqVgFBAvZ57aMLABXA45YJH5ewrntl4klJ8vm7lK+d3yQnFOVegdzoPTgiy5AubUzL6lBqDxT1sZC7pVbXLsgyUBaZ1mr/j8k/Y+XQxZ9M8mfLfQPJeeVrxiLfQ5wgT0aXTqfFv68tBdvD6V0ZMbnwcVrijZq+bdurp+GV1+wqDshGVpBh3FpI8WRVyfxzfBfiUWrZfuvc5t+srZqM8MUZCVsTHNyvCBxBd1k0AWKTUmbnLTIERqTzZF6lq/C/9OOiPPd0c2hM/+W1QSWs8vYOFT5Ogf0D087IEbUSb1pOcgLa877imMv9Q==", "05426200" });
+                values: new object[] { 1, "johndoe@email.com", "John Doe", "$2a$11$qcdxtfCb0gBeVABQeBQ1BuFJocpTjh7dnc4H7Ei3KKcT2xoYHsy3a", "05426200" });
 
             migrationBuilder.InsertData(
                 table: "Pets",

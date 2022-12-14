@@ -22,6 +22,7 @@ public class ErrorHandlerMiddleware
         {
             var response = context.Response;
             response.ContentType = "application/json";
+            string? errorMessage = null;
 
             switch (error)
             {
@@ -33,13 +34,20 @@ public class ErrorHandlerMiddleware
                     // not found error
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                     break;
+                // in case the error.InternalException is not null and its message contains "email"
+                // then it's a duplicate email error
+                case Exception e when e?.InnerException?.Message != null && e.InnerException.Message.ToLower().Contains("email"):
+                    // duplicate email error
+                    response.StatusCode = (int)HttpStatusCode.Conflict;
+                    errorMessage = "Email already in use";
+                    break;
                 default:
                     // unhandled error
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
             }
 
-            var result = JsonSerializer.Serialize(new { error = error.Message });
+            var result = JsonSerializer.Serialize(new { error = errorMessage ?? error.Message });
             await response.WriteAsync(result);
         }
     }
