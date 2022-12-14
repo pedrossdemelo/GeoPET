@@ -3056,10 +3056,10 @@ namespace GeoPET.Migrations
             modelBuilder.Entity("GeoPet.Models.Pet", b =>
                 {
                     b.HasOne("GeoPet.Models.Breed", "Breed")
-                        .WithMany()
+                        .WithMany("Pets")
                         .HasForeignKey("BreedId");
 
-                    b.HasOne("GeoPet.Models.PetCarer", "Carer")
+                    b.HasOne("GeoPet.Models.PetCarer", "PetCarer")
                         .WithMany("Pets")
                         .HasForeignKey("PetCarerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3067,7 +3067,12 @@ namespace GeoPET.Migrations
 
                     b.Navigation("Breed");
 
-                    b.Navigation("Carer");
+                    b.Navigation("PetCarer");
+                });
+
+            modelBuilder.Entity("GeoPet.Models.Breed", b =>
+                {
+                    b.Navigation("Pets");
                 });
 
             modelBuilder.Entity("GeoPet.Models.PetCarer", b =>

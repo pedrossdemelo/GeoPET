@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace GeoPet.Models;
@@ -7,6 +9,7 @@ namespace GeoPet.Models;
 public class PetCarer
 {
     [Key]
+    [JsonIgnore]
     public int PetCarerId { get; set; }
 
     [Required(ErrorMessage = "Name is required")]
@@ -19,10 +22,11 @@ public class PetCarer
     [Required(ErrorMessage = "ZipCode is required")]
     [StringLength(8, MinimumLength = 8, ErrorMessage = "ZipCode must have 8 digits")]
     public string ZipCode { get; set; } = default!;
-    
+
     [Required(ErrorMessage = "Password is required")]
     [Range(6, 20, ErrorMessage = "Password must be between 6 and 20 characters")]
+    [JsonIgnore]
     public string Password { get; set; } = default!;
 
-    public virtual ICollection<Pet>? Pets { get; set; } = default!;
+    public virtual List<Pet> Pets { get; set; } = default!;
 }

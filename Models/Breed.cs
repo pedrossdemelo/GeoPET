@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace GeoPet.Models;
 public class Breed
@@ -10,4 +10,7 @@ public class Breed
     [Required(ErrorMessage = "A pet must have a breed")]
     [StringLength(40, MinimumLength = 3, ErrorMessage = "A pet's breed must be between 3 and 40 characters long")]
     public string Name { get; set; } = default!;
+
+    [JsonIgnore]
+    public virtual List<Pet> Pets { get; set; } = default!;
 }

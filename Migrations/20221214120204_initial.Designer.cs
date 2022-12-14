@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeoPET.Migrations
 {
     [DbContext(typeof(GeoPetContext))]
-    [Migration("20221214110400_initial")]
+    [Migration("20221214120204_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -3059,10 +3059,10 @@ namespace GeoPET.Migrations
             modelBuilder.Entity("GeoPet.Models.Pet", b =>
                 {
                     b.HasOne("GeoPet.Models.Breed", "Breed")
-                        .WithMany()
+                        .WithMany("Pets")
                         .HasForeignKey("BreedId");
 
-                    b.HasOne("GeoPet.Models.PetCarer", "Carer")
+                    b.HasOne("GeoPet.Models.PetCarer", "PetCarer")
                         .WithMany("Pets")
                         .HasForeignKey("PetCarerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -3070,7 +3070,12 @@ namespace GeoPET.Migrations
 
                     b.Navigation("Breed");
 
-                    b.Navigation("Carer");
+                    b.Navigation("PetCarer");
+                });
+
+            modelBuilder.Entity("GeoPet.Models.Breed", b =>
+                {
+                    b.Navigation("Pets");
                 });
 
             modelBuilder.Entity("GeoPet.Models.PetCarer", b =>

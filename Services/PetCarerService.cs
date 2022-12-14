@@ -52,14 +52,14 @@ public class PetCarerService : IPetCarerService
 
     public async Task<List<PetCarer>> GetAllPetCarers()
     {
-        var result = await _context.PetCarers.ToListAsync();
+        var result = await _context.PetCarers.Include(petCarer => petCarer.Pets).ToListAsync();
 
         return result;
     }
 
     public async Task<PetCarer?> GetPetCarerById(int id)
     {
-        var petCarer = await _context.PetCarers.FindAsync(id);
+        var petCarer = await _context.PetCarers.Include(petCarer => petCarer.Pets).FirstOrDefaultAsync(petCarer => petCarer.PetCarerId == id);
         if (petCarer is null) return null;
         return petCarer;
     }
