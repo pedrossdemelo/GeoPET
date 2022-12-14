@@ -9,14 +9,17 @@ namespace GeoPet.Services;
 
 public class PetCarerService : IPetCarerService
 {
-    private async Task<bool> _validZipCode(string zipCode)
+    private async Task<bool> _validateZipCode(string zipCode)
     {
         var client = new RestClient("https://viacep.com.br/ws/");
         var request = new RestRequest(zipCode + "/json", Method.Get);
-        try {
+        try
+        {
             var response = await client.GetAsync(request);
             if (response.StatusCode == HttpStatusCode.OK) return true;
-        } catch {
+        }
+        catch
+        {
             return false;
         }
         return false;
@@ -30,9 +33,7 @@ public class PetCarerService : IPetCarerService
 
     public async Task<PetCarer?> AddPetCarer(PetCarer body)
     {
-        if (!await _validZipCode(body.ZipCode.ToString())) return null;
-        if (_context.PetCarers.AnyAsync(petCarer => petCarer.Email == body.Email).Result)
-            return null;
+        if (!await _validateZipCode(body.ZipCode)) return null;
         return body;
     }
 
@@ -68,7 +69,7 @@ public class PetCarerService : IPetCarerService
         var petCarer = await _context.PetCarers.FindAsync(id);
 
         if (petCarer is null) return null;
-        if (!await _validZipCode(body.ZipCode.ToString())) return null;
+        if (!await _validateZipCode(body.ZipCode.ToString())) return null;
         if (body.Email != petCarer.Email && _context.PetCarers.AnyAsync(petCarer => petCarer.Email == body.Email).Result)
             return null;
 

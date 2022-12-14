@@ -1,22 +1,28 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 namespace GeoPet.Models;
 
-[Table("PETS_CARER")]
+[Index(nameof(Email), IsUnique = true)]
 public class PetCarer
 {
     [Key]
     public int PetCarerId { get; set; }
 
-    public string Name { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Name is required")]
+    public string Name { get; set; } = default!;
 
-    public string Email { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Email is required")]
+    [EmailAddress(ErrorMessage = "Email is not valid")]
+    public string Email { get; set; } = default!;
 
-    public int ZipCode { get; set; }
+    [Required(ErrorMessage = "ZipCode is required")]
+    [StringLength(8, MinimumLength = 8, ErrorMessage = "ZipCode must have 8 digits")]
+    public string ZipCode { get; set; } = default!;
     
-    public string Password { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Password is required")]
+    [Range(6, 20, ErrorMessage = "Password must be between 6 and 20 characters")]
+    public string Password { get; set; } = default!;
 
-    public ICollection<Pet>? Pets { get; set; } = default!;
+    public virtual ICollection<Pet>? Pets { get; set; } = default!;
 }

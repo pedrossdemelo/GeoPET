@@ -52,8 +52,8 @@ public class PetService : IPetService
 
         searchPet.Name = body.Name;
         searchPet.Age = body.Age;
-        searchPet.Size = body.Size;
-        searchPet.Breed = body.Breed;
+        searchPet.Weight = body.Weight;
+        searchPet.BreedId = body.BreedId;
         searchPet.PetCarerId = body.PetCarerId;
         searchPet.HashLocalization = body.HashLocalization; 
 
