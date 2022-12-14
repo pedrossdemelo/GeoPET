@@ -3,9 +3,11 @@ using GeoPet.Entities;
 using GeoPet.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using GeoPet.Models.Authorization;
+using GeoPet.Authorization;
 
 namespace GeoPet.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public class PetCarerController : ControllerBase
@@ -33,6 +35,7 @@ public class PetCarerController : ControllerBase
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult<PetCarer>> AddPetCarer(RegisterRequest body)
     {
@@ -41,10 +44,11 @@ public class PetCarerController : ControllerBase
     }
 
     [HttpPatch]
-    public async Task<ActionResult<PetCarer>> UpdatePetCarer(UpdateRequest body)
+    [Route("{id}")]
+    public async Task<ActionResult<PetCarer>> UpdatePetCarer(int id, UpdateRequest body)
     {
-        var result = await _petCarerService.UpdatePetCarer(body);
-        return CreatedAtAction(nameof(GetPetCarerById), new { id = result.PetCarerId }, result);
+        var result = await _petCarerService.UpdatePetCarer(id, body);
+        return CreatedAtAction(nameof(GetPetCarerById), new { id = id }, result);
     }
 
     [HttpDelete]
@@ -53,5 +57,14 @@ public class PetCarerController : ControllerBase
     {
         await _petCarerService.DeletePetCarer(id);
         return NoContent();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest body)
+    {
+        var response = await _petCarerService.Authenticate(body);
+
+        return Ok(response);
     }
 }

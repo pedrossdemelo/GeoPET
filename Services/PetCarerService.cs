@@ -29,7 +29,7 @@ public class PetCarerService : IPetCarerService
     private readonly IJwtUtils _jwtUtils;
     private readonly IMapper _mapper;
 
-    public PetCarerService(GeoPetContext context, IJwtUtils jwtUtils, IMapper mapper)
+    public PetCarerService(GeoPetContext context, IJwtUtils jwtUtils, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _jwtUtils = jwtUtils;
@@ -80,9 +80,9 @@ public class PetCarerService : IPetCarerService
         return petCarer;
     }
 
-    public async Task<PetCarer> UpdatePetCarer(UpdateRequest body)
+    public async Task<PetCarer> UpdatePetCarer(int id, UpdateRequest body)
     {
-        var petCarer = await _context.PetCarers.FirstOrDefaultAsync(petCarer => petCarer.Email == body.Email);
+        var petCarer = await _context.PetCarers.Include(petCarer => petCarer.Pets).FirstOrDefaultAsync(petCarer => petCarer.PetCarerId == id);
 
         if (petCarer is null) throw new KeyNotFoundException("PetCarer not found");
         if (body.Name is not null) petCarer.Name = body.Name;
@@ -96,9 +96,20 @@ public class PetCarerService : IPetCarerService
 
         await _context.SaveChangesAsync();
 
-        petCarer.Pets = await _context.Pets.Where(pet => pet.PetCarerId == petCarer.PetCarerId).ToListAsync();
-
         return petCarer;
+    }
+
+    public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest body)
+    {
+        var petCarer = await _context.PetCarers.FirstOrDefaultAsync(petCarer => petCarer.Email == body.Email);
+
+        if (petCarer is null || !BCrypt.Net.BCrypt.Verify(body.Password, petCarer.PasswordHash)) throw new InvalidException("Wrong Email or Password");
+
+        var token = _jwtUtils.GenerateToken(petCarer);
+
+        var response = new AuthenticateResponse { Token = token };
+
+        return response;
     }
 }
 

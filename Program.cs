@@ -14,10 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
     services.AddCors();
     services.AddControllers();
-    // services.Configure<ApiBehaviorOptions>(options =>
-    // {
-    //     options.SuppressModelStateInvalidFilter = true;
-    // });
+    services.AddHttpContextAccessor();
 
     // Configure DbContext
     services.AddDbContext<GeoPetContext>();
@@ -64,11 +61,11 @@ if (app.Environment.IsDevelopment())
         .AllowAnyMethod()
         .AllowAnyHeader());
 
-    // authentication handler
-    app.UseMiddleware<JwtMiddleware>();
-
     // error handler
     app.UseMiddleware<ErrorHandlerMiddleware>();
+
+    // authentication handler
+    app.UseMiddleware<JwtMiddleware>();
 
     // redirect to https
     app.UseHttpsRedirection();
