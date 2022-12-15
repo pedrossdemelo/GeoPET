@@ -67,6 +67,8 @@ public class PetCarerController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet]
+    [Route("{id}/pets")]
     public async Task<ActionResult<List<Pet>>> GetPetsByCarerId(int id)
     {
         var pets = await _petCarerService.GetPetsByCarerId(id);
