@@ -3,6 +3,7 @@ using GeoPet.Entities;
 using GeoPet.Interfaces;
 using GeoPet.Authorization;
 using GeoPet.Models.Request;
+using GeoPet.Helpers;
 
 namespace GeoPet.Controllers;
 
@@ -56,5 +57,19 @@ public class PetController : ControllerBase
     {
         var success = await _petService.DeletePet(id);
         return NoContent();
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("{id}/qrcode")]
+    public async Task<ActionResult> GetQRCode(int id)
+    {
+        var result = await _petService.GetPetById(id);
+        var qrCode = QRCodeConverter.ToQRCode(result);
+
+        ViewBag.QrCodeImage = qrCode;
+        ViewBag.PetName = result.Name;
+
+        return View();
     }
 }
