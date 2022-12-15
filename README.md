@@ -1,5 +1,5 @@
 
-#:wolf:  GeoPet 🐾 Localization
+# :wolf:  GeoPet 🐾 Localization
 
 Esta API tem o intuito de cadastrar pessoas cuidadoras de pets e seus pet ou pets que estão sendo cuidados.
 A API também traz funcionalidade de localizar o Pet e mostrar o endereço de onde o mesmo se encontra.
@@ -30,6 +30,7 @@ A API também traz funcionalidade de localizar o Pet e mostrar o endereço de on
     dotnet run
   ```
   </details>
+  
 ## Documentação da API
 
 #### Pet
