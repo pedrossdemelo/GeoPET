@@ -78,6 +78,21 @@ namespace GeoPET.Test.UnitTests.ServicesTests
 
             result.Should().NotBeNull();
         }
+
+        [Fact()]
+        public async Task DeletePet_ShouldBeCompletedWithSuccess()
+        {
+            var petServiceMock = new Mock<IPetService>();
+            var httpContextAccessorMock = new Mock<HttpContextAccessor>();
+            int id = 1;
+
+            petServiceMock.Setup(it => it.DeletePet(id)).Returns(Task.FromResult(false));
+            var controller = new PetController(petServiceMock.Object, httpContextAccessorMock.Object);
+
+            var result = await controller.DeletePet(id);
+
+            result.Should().NotBeNull();
+        }
     }
 
     [ExcludeFromCodeCoverage]
@@ -134,7 +149,6 @@ namespace GeoPET.Test.UnitTests.ServicesTests
             };
         }
 
-
         public static PetRegisterRequest RegisterRequest()
         {
             return new PetRegisterRequest()
@@ -146,33 +160,5 @@ namespace GeoPET.Test.UnitTests.ServicesTests
                 Weight = 10
             };
         }
-
-        public static List<PetRegisterRequest> RegisterListRequest()
-        {
-            return new List<PetRegisterRequest>()
-            {
-                new PetRegisterRequest()
-                {
-                    Age = 10,
-                    //Breed = new() { BreedId = 1, Name = "Raça" },
-                    BreedId = 1,
-                    LocalizationHash = "string",
-                    Name = "Nome",
-                    //PetId = 1,
-                    Weight = 10,
-                    //PetCarerId = 1,
-                    //PetCarer = new()
-                    //{
-                    //    PetCarerId = 1,
-                    //    Name = "Nome",
-                    //    Email = "string@string.com",
-                    //    PasswordHash = "hash to be",
-                    //    ZipCode = "12345678",
-                    //    Pets = new List<Pet>()
-                    //}
-                }
-            };
-        }
-
     }
 }
