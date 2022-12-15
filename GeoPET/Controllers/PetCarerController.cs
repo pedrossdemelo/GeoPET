@@ -3,24 +3,27 @@ using GeoPet.Entities;
 using GeoPet.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using GeoPet.Models.Authorization;
+using GeoPet.Authorization;
 
 namespace GeoPet.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public class PetCarerController : ControllerBase
 {
     private readonly IPetCarerService _petCarerService;
-    public PetCarerController(IPetCarerService petCarerService)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public PetCarerController(IPetCarerService petCarerService, IHttpContextAccessor httpContextAccessor)
     {
         _petCarerService = petCarerService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<PetCarer>>> GetAllPetCarers()
     {
         var petCarers = await _petCarerService.GetAllPetCarers();
-
         return Ok(petCarers);
     }
 
@@ -29,10 +32,10 @@ public class PetCarerController : ControllerBase
     public async Task<ActionResult<PetCarer>> GetPetCarerById(int id)
     {
         var result = await _petCarerService.GetPetCarerById(id);
-        if (result is null) return NotFound("Pet Carer not found.");
         return Ok(result);
     }
 
+    [AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult<PetCarer>> AddPetCarer(RegisterRequest body)
     {
@@ -40,26 +43,35 @@ public class PetCarerController : ControllerBase
         return CreatedAtAction(nameof(GetPetCarerById), new { id = result.PetCarerId }, result);
     }
 
-    [HttpPut]
+    [HttpPatch]
     [Route("{id}")]
-    public async Task<ActionResult<List<PetCarer>>> UpdatePetCarer(int id, PetCarer body)
+    public async Task<ActionResult<PetCarer>> UpdatePetCarer(int id, UpdateRequest body)
     {
-        PetCarer? result;
-        try {
-            result = await _petCarerService.UpdatePetCarer(id, body);
-        } catch (ValidationException e) {
-            return BadRequest(e.Message);
-        }
-        if (result is null) return NotFound("Pet Carer not found.");
-        return Ok(result);
+        var result = await _petCarerService.UpdatePetCarer(id, body);
+        return CreatedAtAction(nameof(GetPetCarerById), new { id = id }, result);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public async Task<ActionResult<string>> DeletePetCarer(int id)
+    public async Task<ActionResult> DeletePetCarer(int id)
     {
-        var sucess = await _petCarerService.DeletePetCarer(id);
-        if (!sucess) return NotFound("Pet Carer not found.");
+        await _petCarerService.DeletePetCarer(id);
         return NoContent();
+    }
+
+    [HttpPost("login")]
+    [AllowAnonymous]
+    public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest body)
+    {
+        var response = await _petCarerService.Authenticate(body);
+        return Ok(response);
+    }
+
+    [HttpGet]
+    [Route("{id}/pets")]
+    public async Task<ActionResult<List<Pet>>> GetPetsByCarerId(int id)
+    {
+        var pets = await _petCarerService.GetPetsByCarerId(id);
+        return Ok(pets);
     }
 }

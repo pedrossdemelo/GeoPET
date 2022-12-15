@@ -6,6 +6,7 @@
       // Use hover for the description of the existing attributes
       // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
       "name": ".NET Core Launch (web)",
+      "enableStepFiltering": false,
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",

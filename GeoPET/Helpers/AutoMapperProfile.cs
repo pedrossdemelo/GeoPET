@@ -15,18 +15,5 @@ public class AutoMapperProfile : Profile
 
         // RegisterRequest -> PetCarer
         CreateMap<RegisterRequest, PetCarer>();
-
-        // UpdateRequest -> PetCarer
-        CreateMap<UpdateRequest, PetCarer>()
-            .ForAllMembers(x => x.Condition(
-                (src, dest, prop) =>
-                {
-                    // ignore null & empty string properties
-                    if (prop == null) return false;
-                    if (prop.GetType() == typeof(string) && string.IsNullOrEmpty((string)prop)) return false;
-
-                    return true;
-                }
-            ));
     }
 }

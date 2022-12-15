@@ -55,7 +55,8 @@ public class JwtUtils : IJwtUtils
             }, out SecurityToken validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var petCarerId = int.Parse(jwtToken.Claims.First(x => x.Type == "PetCarerId").Value);
+            var claimValue = jwtToken.Claims.First(x => x.Type == "PetCarerId").Value;
+            var petCarerId = int.Parse(claimValue);
 
             // return user id from JWT token if validation successful
             return petCarerId;

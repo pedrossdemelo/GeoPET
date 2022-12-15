@@ -44,6 +44,10 @@ public class ErrorHandlerMiddleware
                     response.StatusCode = (int)HttpStatusCode.Conflict;
                     errorMessage = "Email already in use";
                     break;
+                case UnauthorizedAccessException e:
+                    // unauthorized error
+                    response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    break;
                 default:
                     // unhandled error
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
