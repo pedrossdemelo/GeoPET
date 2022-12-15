@@ -57,12 +57,4 @@ public class PetController : ControllerBase
         var success = await _petService.DeletePet(id);
         return NoContent();
     }
-
-    [HttpGet]
-    [Route("{id}/Pets")]
-    public async Task<ActionResult<List<Pet>>> GetPetsByCarerId(int id)
-    {
-        var pets = await _petService.GetPetsByCarerId(id);
-        return Ok(pets);
-    }
 }

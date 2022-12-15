@@ -11,7 +11,7 @@ public interface IPetCarerService
     Task<PetCarer> AddPetCarer(RegisterRequest body);
     Task<PetCarer> UpdatePetCarer(int id, UpdateRequest body);
     Task<bool> DeletePetCarer(int id);
-
+    Task<List<Pet>> GetPetsByCarerId(int id);
     Task<AuthenticateResponse> Authenticate(AuthenticateRequest body);
 }
 

@@ -66,4 +66,10 @@ public class PetCarerController : ControllerBase
         var response = await _petCarerService.Authenticate(body);
         return Ok(response);
     }
+
+    public async Task<ActionResult<List<Pet>>> GetPetsByCarerId(int id)
+    {
+        var pets = await _petCarerService.GetPetsByCarerId(id);
+        return Ok(pets);
+    }
 }

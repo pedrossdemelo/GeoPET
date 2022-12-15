@@ -117,5 +117,12 @@ public class PetCarerService : IPetCarerService
 
         return response;
     }
+
+    public async Task<List<Pet>> GetPetsByCarerId(int id)
+    {
+        var petCarer = (PetCarer)_httpContextAccessor.HttpContext!.Items["PetCarer"]!;
+        var pets = await _context.Pets.Where(pet => pet.PetCarerId == petCarer.PetCarerId).ToListAsync();
+        return pets;
+    }
 }
 
