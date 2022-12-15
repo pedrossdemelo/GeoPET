@@ -1,47 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using GeoPet.Entities;
 using GeoPet.Interfaces;
+using GeoPet.Authorization;
+using GeoPet.Models.Request;
 
 namespace GeoPet.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 [ApiController]
 public class PetController : ControllerBase
 {
     private readonly IPetService _petService;
-    public PetController(IPetService petService)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public PetController(IPetService petService, IHttpContextAccessor httpContextAccessor)
     {
+        _httpContextAccessor = httpContextAccessor;
         _petService = petService;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<Pet>>> GetAllPets()
     {
-        return await _petService.GetAllPets();
+        var pets = await _petService.GetAllPets();
+        return Ok(pets);
     }
 
     [HttpGet]
     [Route("{id}")]
+    [AllowAnonymous]
     public async Task<ActionResult<Pet>> GetPetById(int id)
     {
         var pet = await _petService.GetPetById(id);
-        if (pet is null) return NotFound("Sorry, but this pet doesn't exist.");
         return Ok(pet);
     }
 
     [HttpPost]
-    public async Task<ActionResult<List<Pet>>> AddPet(Pet body)
+    public async Task<ActionResult<List<Pet>>> AddPet(PetRegisterRequest body)
     {
         var pet = await _petService.AddPet(body);
-        return Ok(pet);
+        return CreatedAtAction(nameof(GetPetById), new { id = pet.PetId }, pet);
     }
 
-    [HttpPut]
+    [HttpPatch]
     [Route("{id}")]
-    public async Task<ActionResult<List<Pet>>> UpdatePet(int id, Pet body)
+    public async Task<ActionResult<List<Pet>>> UpdatePet(int id, PetRegisterRequest body)
     {
         var pet = await _petService.UpdatePet(id, body);
-        if (pet is null) return NotFound("Sorry, but this pet doesn't exist.");
         return Ok(pet);
     }
 
@@ -50,7 +55,14 @@ public class PetController : ControllerBase
     public async Task<ActionResult<string>> DeletePet(int id)
     {
         var success = await _petService.DeletePet(id);
-        if (!success) return NotFound("Sorry, but this pet doesn't exist.");
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("{id}/Pets")]
+    public async Task<ActionResult<List<Pet>>> GetPetsByCarerId(int id)
+    {
+        var pets = await _petService.GetPetsByCarerId(id);
+        return Ok(pets);
     }
 }

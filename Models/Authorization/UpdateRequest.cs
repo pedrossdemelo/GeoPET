@@ -4,7 +4,6 @@ namespace GeoPet.Models.Authorization;
 
 public class UpdateRequest
 {
-    [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Email is not valid")]
     public string? Email { get; set; } = default!;
 
@@ -15,5 +14,5 @@ public class UpdateRequest
     public string? ZipCode { get; set; } = default!;
 
     [StringLength(50, MinimumLength = 3, ErrorMessage = "New name must be between 3 and 50 characters")]
-    public string Name { get; set; } = default!;
+    public string? Name { get; set; } = default!;
 }

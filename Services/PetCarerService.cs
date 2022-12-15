@@ -18,8 +18,7 @@ public class PetCarerService : IPetCarerService
         RestResponse? response = null;
         try {
             response = await client.GetAsync(request);
-        } catch (Exception e) {
-            Console.WriteLine(e);
+        } catch {
             return false;
         }
         if (response?.Content == null || response.Content.Contains("erro")) return false;
@@ -33,11 +32,14 @@ public class PetCarerService : IPetCarerService
     private readonly IJwtUtils _jwtUtils;
     private readonly IMapper _mapper;
 
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
     public PetCarerService(GeoPetContext context, IJwtUtils jwtUtils, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _jwtUtils = jwtUtils;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<PetCarer> AddPetCarer(RegisterRequest body)
@@ -59,9 +61,7 @@ public class PetCarerService : IPetCarerService
 
     public async Task<bool> DeletePetCarer(int id)
     {
-        var petCarer = await _context.PetCarers.FindAsync(id);
-
-        if (petCarer is null) throw new KeyNotFoundException("PetCarer not found");
+        var petCarer = (PetCarer)_httpContextAccessor.HttpContext!.Items["PetCarer"]!;
 
         _context.PetCarers.Remove(petCarer);
 
@@ -86,7 +86,7 @@ public class PetCarerService : IPetCarerService
 
     public async Task<PetCarer> UpdatePetCarer(int id, UpdateRequest body)
     {
-        var petCarer = await _context.PetCarers.Include(petCarer => petCarer.Pets).FirstOrDefaultAsync(petCarer => petCarer.PetCarerId == id);
+        var petCarer = (PetCarer)_httpContextAccessor.HttpContext!.Items["PetCarer"]!;
 
         if (petCarer is null) throw new KeyNotFoundException("PetCarer not found");
         if (body.Name is not null) petCarer.Name = body.Name;
@@ -97,6 +97,8 @@ public class PetCarerService : IPetCarerService
             petCarer.ZipCode = body.ZipCode;
         }
         if (body.Password is not null) petCarer.PasswordHash = BCrypt.Net.BCrypt.HashPassword(body.Password);
+
+        petCarer.Pets = await _context.Pets.Where(pet => pet.PetCarerId == petCarer.PetCarerId).ToListAsync();
 
         await _context.SaveChangesAsync();
 
@@ -111,7 +113,7 @@ public class PetCarerService : IPetCarerService
 
         var token = _jwtUtils.GenerateToken(petCarer);
 
-        var response = new AuthenticateResponse { Token = token };
+        var response = new AuthenticateResponse { Token = token, Id = petCarer.PetCarerId };
 
         return response;
     }

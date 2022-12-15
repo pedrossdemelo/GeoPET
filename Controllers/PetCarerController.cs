@@ -13,16 +13,17 @@ namespace GeoPet.Controllers;
 public class PetCarerController : ControllerBase
 {
     private readonly IPetCarerService _petCarerService;
-    public PetCarerController(IPetCarerService petCarerService)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public PetCarerController(IPetCarerService petCarerService, IHttpContextAccessor httpContextAccessor)
     {
         _petCarerService = petCarerService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<PetCarer>>> GetAllPetCarers()
     {
         var petCarers = await _petCarerService.GetAllPetCarers();
-
         return Ok(petCarers);
     }
 
@@ -63,7 +64,6 @@ public class PetCarerController : ControllerBase
     public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest body)
     {
         var response = await _petCarerService.Authenticate(body);
-
         return Ok(response);
     }
 }
