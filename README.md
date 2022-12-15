@@ -29,6 +29,7 @@ A API também traz funcionalidade de localizar o Pet e mostrar o endereço de on
   ```bash
     dotnet run
   ```
+  </details>
 ## Documentação da API
 
 #### Pet
