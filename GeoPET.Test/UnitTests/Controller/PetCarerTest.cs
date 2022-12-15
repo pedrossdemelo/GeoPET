@@ -3,24 +3,22 @@ using GeoPet.Controllers;
 using GeoPet.Entities;
 using GeoPet.Interfaces;
 using GeoPet.Models.Authorization;
+using Microsoft.AspNetCore.Http;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GeoPET.Test.UnitTests.ServicesTests
 {
+    [ExcludeFromCodeCoverage]
     public class PetCarerTest
     {
         [Fact()]
         public async Task GetAllPetCarers_ShouldBeFilledWithSuccess()
         {
             var petCarerServiceMock = new Mock<IPetCarerService>();
+            var httpContextAccessorMock = new Mock<HttpContextAccessor>();
             petCarerServiceMock.Setup(it => it.GetAllPetCarers()).ReturnsAsync(PetCarerMock.GetAll());
-            var controller = new PetCarerController(petCarerServiceMock.Object);
+            var controller = new PetCarerController(petCarerServiceMock.Object, httpContextAccessorMock.Object);
             var result = await controller.GetAllPetCarers();
             result.Should().NotBeNull();
         }
@@ -29,9 +27,10 @@ namespace GeoPET.Test.UnitTests.ServicesTests
         public async Task GetPetCarerById_ShouldBeFilledWithSuccess()
         {
             var petCarerServiceMock = new Mock<IPetCarerService>();
+            var httpContextAccessorMock = new Mock<HttpContextAccessor>();
             int id = 1;
             petCarerServiceMock.Setup(it => it.GetPetCarerById(id)).ReturnsAsync(PetCarerMock.GetOne());
-            var controller = new PetCarerController(petCarerServiceMock.Object);
+            var controller = new PetCarerController(petCarerServiceMock.Object, httpContextAccessorMock.Object);
             var result = await controller.GetPetCarerById(id);
             result.Should().NotBeNull();
         }
@@ -40,8 +39,9 @@ namespace GeoPET.Test.UnitTests.ServicesTests
         public async Task AddPetCarer_ShouldBeCompletedWithSuccess()
         {
             var petCarerServiceMock = new Mock<IPetCarerService>();
+            var httpContextAccessorMock = new Mock<HttpContextAccessor>();
             petCarerServiceMock.Setup(it => it.AddPetCarer(It.IsAny<RegisterRequest>())).ReturnsAsync(PetCarerMock.GetOne());
-            var controller = new PetCarerController(petCarerServiceMock.Object);
+            var controller = new PetCarerController(petCarerServiceMock.Object, httpContextAccessorMock.Object);
             var request = new RegisterRequest()
             {
                 Email = PetCarerMock.GetOne().Email,

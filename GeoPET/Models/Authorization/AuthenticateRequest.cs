@@ -1,6 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GeoPet.Models.Authorization;
+
+[ExcludeFromCodeCoverage]
 public class AuthenticateRequest
 {
     [Required(ErrorMessage = "Email is required")]

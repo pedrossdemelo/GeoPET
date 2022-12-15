@@ -2,11 +2,14 @@
 using GeoPet.Controllers;
 using GeoPet.Entities;
 using GeoPet.Interfaces;
+using GeoPet.Models.Request;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GeoPET.Test.UnitTests.ServicesTests
 {
+    [ExcludeFromCodeCoverage]
     public class PetTest
     {
         [Fact()]
@@ -14,10 +17,11 @@ namespace GeoPET.Test.UnitTests.ServicesTests
         {
             // arrange
             var petServiceMock = new Mock<IPetService>();
+            var httpContextAccessorMock = new Mock<HttpContextAccessor>();
 
             petServiceMock.Setup(it => it.GetAllPets()).ReturnsAsync(PetMock.GetAll());
 
-            var controller = new PetController(petServiceMock.Object);
+            var controller = new PetController(petServiceMock.Object, httpContextAccessorMock.Object);
 
             // act
             var result = controller.GetAllPets();
@@ -33,10 +37,11 @@ namespace GeoPET.Test.UnitTests.ServicesTests
             // arrange
             int id = 1;
             var petServiceMock = new Mock<IPetService>();
+            var httpContextAccessorMock = new Mock<HttpContextAccessor>();
 
-            petServiceMock.Setup(it => it.GetPetById(id)).ReturnsAsync(PetMock.GetById());
+            petServiceMock.Setup(it => it.GetPetById(id)).Returns(Task.FromResult(PetMock.GetById()));
 
-            var controller = new PetController(petServiceMock.Object);
+            var controller = new PetController(petServiceMock.Object, httpContextAccessorMock.Object);
 
             // act
             var result = controller.GetPetById(id);
@@ -50,9 +55,10 @@ namespace GeoPET.Test.UnitTests.ServicesTests
         public async Task AddPet_ShouldBeCompletedWithSuccess()
         {
             var petServiceMock = new Mock<IPetService>();
-            petServiceMock.Setup(it => it.AddPet(It.IsAny<Pet>())).ReturnsAsync(PetMock.GetById());
-            var controller = new PetController(petServiceMock.Object);
-            var result = controller.AddPet(PetMock.GetById());
+            var httpContextAccessorMock = new Mock<HttpContextAccessor>();
+            petServiceMock.Setup(it => it.AddPet(It.IsAny<PetRegisterRequest>())).ReturnsAsync(PetMock.GetById());
+            var controller = new PetController(petServiceMock.Object, httpContextAccessorMock.Object);
+            var result = controller.AddPet(PetMock.RegisterRequest());
 
             var testResult = result.GetAwaiter().GetResult();
             testResult.Should().NotBeNull();
@@ -62,13 +68,15 @@ namespace GeoPET.Test.UnitTests.ServicesTests
         public async Task UpdatePet_ShouldBeCompletedWithSuccess()
         {
             var petServiceMock = new Mock<IPetService>();
+            var httpContextAccessorMock = new Mock<HttpContextAccessor>();
             int id = 1;
-            petServiceMock.Setup(it => it.UpdatePet(id, It.IsAny<Pet>())).ReturnsAsync(PetMock.GetById());
-            var controller = new PetController(petServiceMock.Object);
-            var result = controller.AddPet(PetMock.GetById());
 
-            var testResult = result.GetAwaiter().GetResult();
-            testResult.Should().NotBeNull();
+            petServiceMock.Setup(it => it.UpdatePet(id, It.IsAny<PetRegisterRequest>())).ReturnsAsync(PetMock.GetById());
+            var controller = new PetController(petServiceMock.Object, httpContextAccessorMock.Object);
+
+            var result = await controller.AddPet(PetMock.RegisterRequest());
+
+            result.Should().NotBeNull();
         }
     }
 
@@ -125,5 +133,58 @@ namespace GeoPET.Test.UnitTests.ServicesTests
                 }
             };
         }
+
+
+        public static PetRegisterRequest RegisterRequest()
+        {
+            return new PetRegisterRequest()
+            {
+                Age = 10,
+                //Breed = new() { BreedId = 1, Name = "Raça" },
+                BreedId = 1,
+                LocalizationHash = "string",
+                Name = "Nome",
+                //PetId = 1,
+                Weight = 10,
+                //PetCarerId = 1,
+                //PetCarer = new()
+                //{
+                //    PetCarerId = 1,
+                //    Name = "Nome",
+                //    Email = "string@string.com",
+                //    PasswordHash = "hash to be",
+                //    ZipCode = "12345678",
+                //    Pets = new List<Pet>()
+                //}
+            };
+        }
+
+        public static List<PetRegisterRequest> RegisterListRequest()
+        {
+            return new List<PetRegisterRequest>()
+            {
+                new PetRegisterRequest()
+                {
+                    Age = 10,
+                    //Breed = new() { BreedId = 1, Name = "Raça" },
+                    BreedId = 1,
+                    LocalizationHash = "string",
+                    Name = "Nome",
+                    //PetId = 1,
+                    Weight = 10,
+                    //PetCarerId = 1,
+                    //PetCarer = new()
+                    //{
+                    //    PetCarerId = 1,
+                    //    Name = "Nome",
+                    //    Email = "string@string.com",
+                    //    PasswordHash = "hash to be",
+                    //    ZipCode = "12345678",
+                    //    Pets = new List<Pet>()
+                    //}
+                }
+            };
+        }
+
     }
 }

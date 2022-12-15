@@ -5,71 +5,80 @@ using GeoPet.Authorization;
 using GeoPet.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the Dependency Injection container.
+[ExcludeFromCodeCoverage]
+public static class Program
 {
-    var services = builder.Services;
+    public static async Task Main(string[] args)
+    {
 
-    services.AddCors();
-    services.AddControllers();
-    services.AddHttpContextAccessor();
+        var builder = WebApplication.CreateBuilder(args);
 
-    // Configure DbContext
-    services.AddDbContext<GeoPetContext>();
+        // Add services to the Dependency Injection container.
+        {
+            var services = builder.Services;
 
-    // Configure auto mapper with all automapper profiles
-    services.AddAutoMapper(typeof(Program));
+            services.AddCors();
+            services.AddControllers();
+            services.AddHttpContextAccessor();
 
-    // Configure strongly typed settings objects
-    services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+            // Configure DbContext
+            services.AddDbContext<GeoPetContext>();
 
-    // Setup DI
-    services.AddScoped<IPetService, PetService>();
-    services.AddScoped<IPetCarerService, PetCarerService>();
-    services.AddScoped<ISearchService, SearchService>();
-    services.AddScoped<IJwtUtils, JwtUtils>();
+            // Configure auto mapper with all automapper profiles
+            services.AddAutoMapper(typeof(Program));
 
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen();
+            // Configure strongly typed settings objects
+            services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
+            // Setup DI
+            services.AddScoped<IPetService, PetService>();
+            services.AddScoped<IPetCarerService, PetCarerService>();
+            services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<IJwtUtils, JwtUtils>();
+
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+        }
+
+        var app = builder.Build();
+
+        // Migrate database
+        using (var scope = app.Services.CreateScope())
+        {
+            var serviceProvider = scope.ServiceProvider;
+            var context = serviceProvider.GetRequiredService<GeoPetContext>();
+            context.Database.Migrate();
+        }
+
+
+        // configure request pipeline
+        // cors policy
+        app.UseCors(x => x
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+
+        // error handler
+        app.UseMiddleware<ErrorHandlerMiddleware>();
+
+        // authentication handler
+        app.UseMiddleware<JwtMiddleware>();
+
+
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        // map routes
+        app.MapControllers();
+
+        app.Run();
+
+    }
 }
-
-var app = builder.Build();
-
-// Migrate database
-using (var scope = app.Services.CreateScope())
-{
-    var serviceProvider = scope.ServiceProvider;
-    var context = serviceProvider.GetRequiredService<GeoPetContext>();
-    context.Database.Migrate();
-}
-
-
-// configure request pipeline
-// cors policy
-app.UseCors(x => x
-.AllowAnyOrigin()
-.AllowAnyMethod()
-.AllowAnyHeader());
-
-// error handler
-app.UseMiddleware<ErrorHandlerMiddleware>();
-
-// authentication handler
-app.UseMiddleware<JwtMiddleware>();
-
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-// map routes
-app.MapControllers();
-
-app.Run();
-

@@ -1,8 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace GeoPet.Entities;
 
+
+[ExcludeFromCodeCoverage]
 public class Pet
 {
     [Key]

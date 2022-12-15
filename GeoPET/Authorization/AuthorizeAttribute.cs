@@ -3,8 +3,10 @@ namespace GeoPet.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using GeoPet.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+[ExcludeFromCodeCoverage]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)

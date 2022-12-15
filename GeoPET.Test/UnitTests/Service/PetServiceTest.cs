@@ -2,6 +2,7 @@
 using GeoPet.Data;
 using GeoPet.Entities;
 using GeoPet.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -9,20 +10,23 @@ using Microsoft.OpenApi.Any;
 using Moq;
 using System;
 using System.CodeDom;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 
 namespace GeoPET.Test.UnitTests.Service
 {
+    [ExcludeFromCodeCoverage]
     public class PetServiceTest
     {
         [Fact]
         public async Task GetAllPets_ShouldBeCompletedWithSuccess()
         {
             var contextMock = new Mock<GeoPetContext>();
+            var httpContextAccessorMock = new Mock<HttpContextAccessor>();
             //contextMock.SetupGet(it => it.Pets.ToList()).Returns(ContextMock.GetAllPets());
             contextMock.As<IQueryable<Pet>>().Setup(it => it.ToList()).Returns(new List<Pet>());
 
-            var service = new PetService(contextMock.Object);
+            var service = new PetService(contextMock.Object, httpContextAccessorMock.Object);
             var result = await service.GetAllPets();
             result.Should().NotBeNull();
         }
@@ -47,7 +51,7 @@ namespace GeoPET.Test.UnitTests.Service
                 return mock.Object;
             }
 
-            public static Task<List<Pet>> GetAllPets()
+            public static List<Pet> GetAllPets()
             {
                 var pets =
                     new List<Pet>()

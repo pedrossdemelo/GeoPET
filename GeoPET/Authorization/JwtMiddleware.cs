@@ -1,8 +1,10 @@
 namespace GeoPet.Authorization;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using GeoPet.Interfaces;
 
+[ExcludeFromCodeCoverage]
 public class JwtMiddleware
 {
     private readonly RequestDelegate _next;

@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GeoPet.Models.Request;
 
+[ExcludeFromCodeCoverage]
 public class PetRegisterRequest
 {
     [Required(ErrorMessage = "A pet must have a name")]

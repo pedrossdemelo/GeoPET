@@ -1,8 +1,10 @@
 namespace GeoPet.Helpers;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 
+[ExcludeFromCodeCoverage]
 public class ErrorHandlerMiddleware
 {
     private readonly RequestDelegate _next;

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace GeoPET.Test.UnitTests.ServicesTests
 {
+    [ExcludeFromCodeCoverage]
     public class SearchTest
     {
         [Fact]
