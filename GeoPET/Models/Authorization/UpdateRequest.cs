@@ -1,9 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace GeoPet.Models.Authorization;
 
-[ExcludeFromCodeCoverage]
 public class UpdateRequest
 {
     [EmailAddress(ErrorMessage = "Email is not valid")]

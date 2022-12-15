@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System.Diagnostics.CodeAnalysis;
 
 namespace GeoPet.Models.Response;
 
-[ExcludeFromCodeCoverage]
 public class Address
 {
     public string road { get; set; } = default!;
@@ -23,7 +21,6 @@ public class Address
     public string country_code { get; set; } = default!;
 }
 
-[ExcludeFromCodeCoverage]
 public class AddressResponse
 {
     public int place_id { get; set; }

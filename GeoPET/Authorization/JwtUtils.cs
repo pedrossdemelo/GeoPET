@@ -8,9 +8,7 @@ using System.Text;
 using GeoPet.Entities;
 using GeoPet.Helpers;
 using GeoPet.Interfaces;
-using System.Diagnostics.CodeAnalysis;
 
-[ExcludeFromCodeCoverage]
 public class JwtUtils : IJwtUtils
 {
     private readonly AppSettings _appSettings;

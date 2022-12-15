@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using GeoPet.Entities;
-using System.Diagnostics.CodeAnalysis;
 
 namespace GeoPet.Data;
 
-[ExcludeFromCodeCoverage]
 public class GeoPetContext : DbContext
 {
     protected readonly IConfiguration Configuration;

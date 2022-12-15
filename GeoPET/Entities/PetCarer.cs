@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace GeoPet.Entities;
 
-[ExcludeFromCodeCoverage]
 [Index(nameof(Email), IsUnique = true)]
 public class PetCarer
 {
