@@ -12,7 +12,7 @@ public class QRCodePetData
     public string Breed { get; set; } = string.Empty;
     public double Weight { get; set; }
     public int Age { get; set; }
-    public QRCodeCarerData Carer { get; set; } = default!;
+    public QRCodeCarerData Carer { get; set; } = new();
 }
 
 public class QRCodeCarerData
@@ -26,18 +26,19 @@ public static class QRCodeConverter
 {
     public static string ToQRCode(Pet pet)
     {
-        var petData = new QRCodePetData
+        QRCodeCarerData thing = new QRCodeCarerData
+        {
+            Name = pet.PetCarer.Name,
+            Email = pet.PetCarer.Email,
+            ZipCode = pet.PetCarer.ZipCode
+        };
+        QRCodePetData petData = new QRCodePetData
         {
             Name = pet.Name,
             Breed = pet.Breed?.Name ?? "Unknown",
             Weight = pet.Weight,
             Age = pet.Age,
-            Carer = new QRCodeCarerData
-            {
-                Name = pet.PetCarer.Name,
-                Email = pet.PetCarer.Email,
-                ZipCode = pet.PetCarer.ZipCode
-            }
+            Carer = thing
         };
         var stringData = JsonSerializer.Serialize(petData);
         return GenerateQRString(stringData);
