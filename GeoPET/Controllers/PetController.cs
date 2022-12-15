@@ -10,7 +10,7 @@ namespace GeoPet.Controllers;
 [Authorize]
 [Route("[controller]")]
 [ApiController]
-public class PetController : ControllerBase
+public class PetController : Controller
 {
     private readonly IPetService _petService;
     private readonly IHttpContextAccessor _httpContextAccessor;
