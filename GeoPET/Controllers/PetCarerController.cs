@@ -74,4 +74,5 @@ public class PetCarerController : ControllerBase
         var pets = await _petCarerService.GetPetsByCarerId(id);
         return Ok(pets);
     }
+
 }
