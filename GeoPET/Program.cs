@@ -6,6 +6,7 @@ using GeoPet.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 [ExcludeFromCodeCoverage]
 public static class Program
@@ -22,6 +23,10 @@ public static class Program
             services.AddCors();
             services.AddControllers();
             services.AddHttpContextAccessor();
+            services.AddControllersWithViews().AddJsonOptions(x =>
+                {
+                x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
             // Configure DbContext
             services.AddDbContext<GeoPetContext>();
