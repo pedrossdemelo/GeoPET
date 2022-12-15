@@ -4,7 +4,6 @@
 Esta API tem o intuito de cadastrar pessoas cuidadoras de pets e seus pet ou pets que estão sendo cuidados.
 A API também traz funcionalidade de localizar o Pet e mostrar o endereço de onde o mesmo se encontra.
 
-[Veja uma demonstração](https://youtu.be/6iRUxJaEPBw)
 
 ## Funcionalidades
 
@@ -64,6 +63,9 @@ A API também traz funcionalidade de localizar o Pet e mostrar o endereço de on
 
 
 ## Vídeo Apresentação
+
+[Veja a demonstração](https://youtu.be/6iRUxJaEPBw)
+
 ## Tecnologias Utilizadas
 
 - C#
