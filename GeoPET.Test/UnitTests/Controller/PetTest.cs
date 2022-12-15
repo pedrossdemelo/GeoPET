@@ -74,7 +74,7 @@ namespace GeoPET.Test.UnitTests.ServicesTests
             petServiceMock.Setup(it => it.UpdatePet(id, It.IsAny<PetRegisterRequest>())).ReturnsAsync(PetMock.GetById());
             var controller = new PetController(petServiceMock.Object, httpContextAccessorMock.Object);
 
-            var result = await controller.AddPet(PetMock.RegisterRequest());
+            var result = await controller.UpdatePet(id, PetMock.RegisterRequest());
 
             result.Should().NotBeNull();
         }
@@ -140,22 +140,10 @@ namespace GeoPET.Test.UnitTests.ServicesTests
             return new PetRegisterRequest()
             {
                 Age = 10,
-                //Breed = new() { BreedId = 1, Name = "Raça" },
                 BreedId = 1,
                 LocalizationHash = "string",
                 Name = "Nome",
-                //PetId = 1,
-                Weight = 10,
-                //PetCarerId = 1,
-                //PetCarer = new()
-                //{
-                //    PetCarerId = 1,
-                //    Name = "Nome",
-                //    Email = "string@string.com",
-                //    PasswordHash = "hash to be",
-                //    ZipCode = "12345678",
-                //    Pets = new List<Pet>()
-                //}
+                Weight = 10
             };
         }
 
